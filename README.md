@@ -1,18 +1,8 @@
-# The official raywenderlich.com Objective-C style guide.
+# The unofficial ProgForce Objective-C style guide.
 
-This style guide outlines the coding conventions for raywenderlich.com.
+This style guide outlines the coding conventions for ProgForce company.
 
 ## Introduction
-
-The reason we made this style guide was so that we could keep the code in our books, tutorials, and starter kits nice and consistent - even though we have many different authors working on the books.
-
-This style guide is different from other Objective-C style guides you may see, because the focus is centered on readability for print and the web. Many of the decisions were made with an eye toward conserving space for print, easy legibility, and tutorial writing.
-
-## Credits
-
-The creation of this style guide was a collaborative effort from various raywenderlich.com team members under the direction of Nicholas Waynik.  The team includes: [Soheil Moayedi Azarpour](https://github.com/moayes), [Ricardo Rendon Cepeda](https://github.com/ricardo-rendoncepeda), [Tony Dahbura](https://github.com/tdahbura), [Colin Eberhardt](https://github.com/ColinEberhardt), [Matt Galloway](https://github.com/mattjgalloway), [Greg Heo](https://github.com/gregheo), [Matthijs Hollemans](https://github.com/hollance), [Christopher LaPollo](https://github.com/elephantronic), [Saul Mora](https://github.com/casademora), [Andy Pereira](https://github.com/macandyp), [Mic Pringle](https://github.com/micpringle), [Pietro Rea](https://github.com/pietrorea), [Cesare Rocchi](https://github.com/funkyboy), [Marin Todorov](https://github.com/icanzilb), [Nicholas Waynik](https://github.com/ndubbs), and [Ray Wenderlich](https://github.com/raywenderlich)
-
-We would like to thank the creators of the [New York Times](https://github.com/NYTimes/objective-c-style-guide) and [Robots & Pencils'](https://github.com/RobotsAndPencils/objective-c-style-guide) Objective-C Style Guides.  These two style guides provided a solid starting point for this guide to be created and based upon.
 
 ## Background
 
@@ -49,14 +39,20 @@ Here are some of the documents from Apple that informed the style guide. If some
 * [Golden Path](#golden-path)
 * [Error handling](#error-handling)
 * [Singletons](#singletons)
+* [Dealloc Methods](#dealloc-methods)
 * [Line Breaks](#line-breaks)
-* [Smiley Face](#smiley-face)
+* [Import](#import)
+* [Basic Code Principles](#basic-code-principles)
+* [Testing](#testing)
 * [Xcode Project](#xcode-project)
+* [Image Naming](#image-naming)
+* [xib Files](#xib-files)
 
 
 ## Language
 
-US English should be used.
+US English should be used. Don't use transliteration.
+Avoid non-english (especially cyrillic) comments.
 
 **Preferred:**
 ```objc
@@ -66,6 +62,7 @@ UIColor *myColor = [UIColor whiteColor];
 **Not Preferred:**
 ```objc
 UIColor *myColour = [UIColor whiteColor];
+UIColor *beliyCvet = [UIColor whiteColor];
 ```
 
 
@@ -115,15 +112,15 @@ Use `#pragma mark -` to categorize methods in functional groupings and protocol/
 
 ## Spacing
 
-* Indent using 2 spaces (this conserves space in print and makes line wrapping less likely). Never indent with tabs. Be sure to set this preference in Xcode.
+* Indent using 4 spaces (this conserves space in print and makes line wrapping less likely). Never indent with tabs. Be sure to set this preference in Xcode.
 * Method braces and other braces (`if`/`else`/`switch`/`while` etc.) always open on the same line as the statement but close on a new line.
 
 **Preferred:**
 ```objc
 if (user.isHappy) {
-  //Do something
+    //Do something
 } else {
-  //Do something else
+    //Do something else
 }
 ```
 
@@ -140,6 +137,7 @@ else {
 
 * There should be exactly one blank line between methods to aid in visual clarity and organization. Whitespace within methods should separate functionality, but often there should probably be new methods.
 * Prefer using auto-synthesis. But if necessary, `@synthesize` and `@dynamic` should each be declared on new lines in the implementation.
+
 * Colon-aligning method invocation should often be avoided.  There are cases where a method signature may have >= 3 colons and colon-aligning makes the code more readable. Please do **NOT** however colon align methods containing blocks because Xcode's indenting makes it illegible.
 
 **Preferred:**
@@ -190,7 +188,8 @@ UIButton *settingsButton;
 UIButton *setBut;
 ```
 
-A three letter prefix should always be used for class names and constants, however may be omitted for Core Data entity names. For any official raywenderlich.com books, starter kits, or tutorials, the prefix 'RWT' should be used.
+A two letter prefix should always be used for class names and constants, however may be omitted for Core Data entity names. 
+For all company's projects *PF* should be used.
 
 Constants should be camel-case with all words capitalized and prefixed by the related class name for clarity.
 
@@ -207,6 +206,7 @@ static NSTimeInterval const fadetime = 1.7;
 ```
 
 Properties should be camel-case with the leading word being lowercase. Use auto-synthesis for properties rather than manual @synthesize statements unless you have good reason.
+
 
 **Preferred:**
 
@@ -251,6 +251,11 @@ The usage of the word "and" is reserved.  It should not be used for multiple par
 - (instancetype)initWithWidth:(CGFloat)width andHeight:(CGFloat)height;
 - (instancetype)initWith:(int)width and:(int)height;  // Never do this.
 ```
+*Exception:** if the method describes *two separate actions*, use "and" to link them:
+
+```objc
+- (BOOL)openFile:(NSString *)fullPath withApplication:(NSString *)appName andDeactivate:(BOOL)flag;
+```
 
 ## Variables
 
@@ -259,6 +264,7 @@ Variables should be named as descriptively as possible. Single letter variable n
 Asterisks indicating pointers belong with the variable, e.g., `NSString *text` not `NSString* text` or `NSString * text`, except in the case of constants.
 
 [Private properties](#private-properties) should be used in place of instance variables whenever possible. Although using instance variables is a valid way of doing things, by agreeing to prefer properties our code will be more consistent. 
+See (http://useyourloaf.com/blog/2012/08/01/property-synthesis-with-xcode-4-dot-4.html) "When To Supply The Instance Variable" for clarity*
 
 Direct access to instance variables that 'back' properties should be avoided except in initializer methods (`init`, `initWithCoder:`, etc…), `dealloc` methods and within custom setters and getters. For more information on using Accessor Methods in Initializer Methods and dealloc, see [here](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmPractical.html#//apple_ref/doc/uid/TP40004447-SW6).
 
@@ -687,6 +693,17 @@ Singleton objects should use a thread-safe pattern for creating their shared ins
 This will prevent [possible and sometimes prolific crashes](http://cocoasamurai.blogspot.com/2011/04/singletons-your-doing-them-wrong.html).
 
 
+Dealloc Methods
+---------------
+Dealloc methods are no longer required when using arc but in certain cases must be used to remove observers, KVO, etc.
+You are not allowed to call [super dealloc] from within the subclassed method in such case.
+
+```objc
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+```
+
 ## Line Breaks
 
 Line breaks are an important topic since this style guide is focused for print and online readability.
@@ -701,20 +718,68 @@ self.productsRequest = [[SKProductsRequest alloc]
   initWithProductIdentifiers:productIdentifiers];
 ```
 
+## Import
 
-## Smiley Face
+**Always** use `@class` whenever possible in header files instead of `#import` since it has a slight compile time performance boost.
 
-Smiley faces are a very prominent style feature of the raywenderlich.com site!  It is very important to have the correct smile signifying the immense amount of happiness and excitement for the coding topic.  The end square bracket is used because it represents the largest smile able to be captured using ascii art.  A half-hearted smile is represented if an end parenthesis is used, and thus not preferred.
+From the [Objective-C Programming Guide](http://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjectiveC/ObjC.pdf) (Page 38):
 
-**Preferred:**
-```objc
-:]
+> The @class directive minimizes the amount of code seen by the compiler and linker, and is therefore the simplest way to give a forward declaration of a class name. Being simple, it avoids potential problems that may come with importing files that import still other files. For example, if one class declares a statically typed instance variable of another class, and their two interface files import each other, neither class may compile correctly.
+
+### Header Prefix
+
+Adding frameworks that are used in the majority of a project to a header prefix is preferred. If these frameworks are in the header prefix, they should **never** be imported in source files in the project.
+
+For example, if a header prefix looks like the following:
+
+```objective-c
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
+#endif
 ```
 
-**Not Preferred:**
-```objc
-:)
-```  
+`#import <Foundation/Foundation.h>` should never occur in the project outside of the header prefix.
+
+Basic Code Principles
+-------
+* Each function/method should aim to perform one action/task that reflects it's name.
+* Since each function/method performs one action/task each one should be relatively short. If the code does not fit on one screen for example, you know you have a problem!
+* Declare local variables as close to the code they are used in as possible.
+* Always aim to reduce code nesting (ie a statement that is nested in an if, an if, a for and an if is hard for the brain to evaluate.  Refactor!).
+
+Testing
+============
+* You are responsible for thoroughly testing your own code before passing off to quality assurance.
+* Your code must always be tested by a minimum of one other person that is not you.
+* Automated tests should always be added to at least critical code sections at a minimum (ex. algorithm to calculate mortgage details for a bank).
+
+
+Boyscout Guide
+=========
+Always leave the code in better condition than you found it.
+
+
+xib Files
+=========
+xib files should always be saved in their language-specific folders.  The default folder for English is `en.lproj`.
+xib file names should end in `view`, `menu` or `window` but never `controller` (as xibs are *not* controllers).
+
+Give descriptive labels to views to make them easier to recognize, preferrably the same name as the referencing outlet if there is one.
+
+![](http://f.cl.ly/items/3A2k2Z2m0n2t0b1L2V3n/Screen%20Shot%202013-06-05%20at%201.15.36%20PM.png)
+
+
+## Image Naming
+
+Image names should be named consistently to preserve organization and developer sanity. They should be named as one camel case string with a description of their purpose, followed by the un-prefixed name of the class or property they are customizing (if there is one), followed by a further description of color and/or placement, and finally their state.
+
+**For example:**
+
+* `RefreshBarButtonItem` / `RefreshBarButtonItem@2x` and `RefreshBarButtonItemSelected` / `RefreshBarButtonItemSelected@2x`
+* `ArticleNavigationBarWhite` / `ArticleNavigationBarWhite@2x` and `ArticleNavigationBarBlackSelected` / `ArticleNavigationBarBlackSelected@2x`.
+
+Images that are used for a similar purpose should be grouped in respective groups in an Images folder.
 
 
 ## Xcode project
@@ -736,3 +801,9 @@ If ours doesn't fit your tastes, have a look at some other style guides:
 * [CocoaDevCentral](http://cocoadevcentral.com/articles/000082.php)
 * [Luke Redpath](http://lukeredpath.co.uk/blog/my-objective-c-style-guide.html)
 * [Marcus Zarra](http://www.cimgf.com/zds-code-style-guide/)
+
+
+## Credits
+
+This style guide is heavily based on raywenderlich.com style guide.
+Many thanks to: [Soheil Moayedi Azarpour](https://github.com/moayes), [Ricardo Rendon Cepeda](https://github.com/ricardo-rendoncepeda), [Tony Dahbura](https://github.com/tdahbura), [Colin Eberhardt](https://github.com/ColinEberhardt), [Matt Galloway](https://github.com/mattjgalloway), [Greg Heo](https://github.com/gregheo), [Matthijs Hollemans](https://github.com/hollance), [Christopher LaPollo](https://github.com/elephantronic), [Saul Mora](https://github.com/casademora), [Andy Pereira](https://github.com/macandyp), [Mic Pringle](https://github.com/micpringle), [Pietro Rea](https://github.com/pietrorea), [Cesare Rocchi](https://github.com/funkyboy), [Marin Todorov](https://github.com/icanzilb), [Nicholas Waynik](https://github.com/ndubbs), and [Ray Wenderlich](https://github.com/raywenderlich)
